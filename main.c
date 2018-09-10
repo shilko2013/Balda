@@ -2,8 +2,9 @@
 #include "field.c"
 
 int main() {
-    field *game_field = get_field(5);
-    fill_field(game_field);
-    print_field(game_field);
+    dict_length *dict = init_dict_length('U',5);
+    for (int i = 0; i < *dict->size; ++i) {
+        printf("%s\n",dict->words[i]);
+    }
     return 0;
 }
