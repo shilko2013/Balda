@@ -7,7 +7,9 @@
 #define TCHAR char
 #endif
 
-/*field *game_field = get_field(5);
+#define DEFAULT_FIELD_SIZE 5
+
+/*field *game_field = init_field(DEFAULT_FIELD_SIZE);
     fill_field(game_field);
     print_field(game_field);*/
 
@@ -16,7 +18,7 @@ typedef struct {
     TCHAR **field;
 } field;
 
-field *get_field(const int size) {
+field *init_field(const int size) {
     field *game_field = (field *) malloc(sizeof(field));
     game_field->size = (int *) malloc(sizeof(int));
     *game_field->size = size;

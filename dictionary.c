@@ -9,6 +9,7 @@
 #define TCHAR char
 #endif
 
+#define CATALOG_NAME "dictionary"
 #define FILE_NAME_LENGTH 21
 #define MAX_WORD_LENGTH 25
 #define RUS_COUNT_LETTERS 33
@@ -69,8 +70,8 @@ dict_length *init_dict_length(const int letter_number, const int length, const i
     if (rus)                    //манипуляции для русского языка
         language_length *= 2; //16 бит на символ вместо 8
     dict_length *dict = (dict_length *) malloc(sizeof(dict_length));
-    TCHAR *path = (TCHAR *) malloc(sizeof(TCHAR) * FILE_NAME_LENGTH);
-    snprintf(path, sizeof(TCHAR) * FILE_NAME_LENGTH, "dictionary_%02d_%02d.txt", letter_number, length);
+    TCHAR *path = (TCHAR *) malloc(sizeof(TCHAR) * FILE_NAME_LENGTH + strlen(CATALOG_NAME) + 2); //2 for slashes
+    snprintf(path, sizeof(TCHAR) * FILE_NAME_LENGTH + strlen(CATALOG_NAME) + 2, CATALOG_NAME "\\dictionary_%02d_%02d.txt", letter_number, length);
     FILE *file = fopen(path, "r");
     if (file == NULL)
         return NULL;
@@ -109,7 +110,7 @@ dict_letters *init_dict_letter(const int letter_number, int rus) {
     return dict;
 }
 
-void print_dict(dictionary *d) {
+void print_dict(dictionary *d) { //for debugging
     for (int i = 0; i < *d->size; ++i) {
         if (d->dicts_letters[i] != NULL) {
             for (int j = 0; j < *d->dicts_letters[i]->size; ++j) {
@@ -135,7 +136,7 @@ dictionary *init_dict(int rus) {
     return dict;
 }
 
-int dict_search() {
+int dict_search(const TCHAR * const word) {
     return -1;
 }
 
