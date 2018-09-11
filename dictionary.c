@@ -11,6 +11,10 @@
 
 #define FILE_NAME_LENGTH 21
 #define MAX_WORD_LENGTH 25
+#define RUS_COUNT_LETTERS 33
+#define EN_COUNT_LETTERS 26
+#define RUS 1
+#define EN 0
 
 /* Для быстрого поиска словарь разделен на 33 двумерных
  * массива(количество букв) - dictionary_by_letters.
@@ -60,8 +64,7 @@ int letter_to_int(const TCHAR *const letter, int rus) {
  * @param length - Длина слов
  * @param rus - флаг русского языка
  */
-dict_length *init_dict_length(const TCHAR *const letter, const int length, const int rus) {
-    int letter_number = letter_to_int(letter, rus);
+dict_length *init_dict_length(const int letter_number, const int length, const int rus) {
     int language_length = length; //отвечает за unicode
     if (rus)                    //манипуляции для русского языка
         language_length *= 2; //16 бит на символ вместо 8
@@ -96,34 +99,46 @@ dict_length *init_dict_length(const TCHAR *const letter, const int length, const
     return dict;
 }
 
-dict_letters *init_dict_letter(const TCHAR *letter, int rus) {
+dict_letters *init_dict_letter(const int letter_number, int rus) {
     dict_letters *dict = (dict_letters *) malloc(sizeof(dict_letters));
     dict->size = (int *) malloc(sizeof(int));
     *dict->size = MAX_WORD_LENGTH;
     dict->dicts_length = (dict_length **) malloc(sizeof(dict_length *) * MAX_WORD_LENGTH);
-    for (int i = 0; i < MAX_WORD_LENGTH; ++i) {
-        dict->dicts_length[i] = init_dict_length(letter, i, rus);
-    }
+    for (int i = 0; i < MAX_WORD_LENGTH; ++i)
+        dict->dicts_length[i] = init_dict_length(letter_number, i, rus);
     return dict;
 }
 
-void print(dict_letters *d) {
-    for (int i = 0; i < MAX_WORD_LENGTH; ++i) {
-        if (d->dicts_length[i] != NULL)
-            for (int j = 0; j < *(d->dicts_length[i]->size); ++j) {
-                printf("%s\n", d->dicts_length[i]->words[j]);
+void print_dict(dictionary *d) {
+    for (int i = 0; i < *d->size; ++i) {
+        if (d->dicts_letters[i] != NULL) {
+            for (int j = 0; j < *d->dicts_letters[i]->size; ++j) {
+                if (d->dicts_letters[i]->dicts_length[j] != NULL)
+                    for (int k = 0; k < *d->dicts_letters[i]->dicts_length[j]->size; ++k)
+                        printf("%s\n",d->dicts_letters[i]->dicts_length[j]->words[k]);
             }
-        printf("\n");
+            printf("\n");
+        }
     }
 }
 
-dictionary *init_dict() {
-    return NULL;
+dictionary *init_dict(int rus) {
+    dictionary *dict = (dictionary *) malloc(sizeof(dictionary));
+    dict->size = (int *) malloc(sizeof(int));
+    if (rus)
+        *dict->size = RUS_COUNT_LETTERS;
+    else
+        *dict->size = EN_COUNT_LETTERS;
+    dict->dicts_letters = (dict_letters **) malloc(sizeof(dict_letters *) * *dict->size);
+        for (int i = 0; i < *dict->size; ++i)
+            dict->dicts_letters[i] = init_dict_letter(i, rus);
+    return dict;
 }
 
 int dict_search() {
     return -1;
 }
 
-void binary_search() {
+int binary_search() {
+    return -1;
 }
