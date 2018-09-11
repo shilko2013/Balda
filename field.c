@@ -40,10 +40,10 @@ void print_field(const field * const game_field) {
     }
 }
 
-void set_letter(const field * const game_field, int x, int y, TCHAR letter) {
+void set_letter(const field * const game_field, const int x, const int y, const TCHAR letter) {
     game_field->field[x][y] = letter;
 }
 
-TCHAR get_letter(field *game_field, int x, int y) {
+TCHAR get_letter(const field * const game_field, const int x, const int y) {
     return game_field->field[x][y];
 }
